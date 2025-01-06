@@ -1,0 +1,5 @@
+docker network ls
+docker network create BP_network
+docker run -d -p 27017:27017  --net BP_network --name mongodb -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=12345 mongo
+docker run -d -p 8081:8081 --network BP_network --name mongo-express  -e ME_CONFIG_MONGODB_SERVER=mongodb -e ME_CONFIG_MONGODB_ADMINUSERNAME=admin -e ME_CONFIG_MONGODB_ADMINPASSWORD=12345 -e ME_CONFIG_BASICAUTH_USERNAME=admin -e ME_CONFIG_BASICAUTH_PASSWORD=12345 mongo-express
+

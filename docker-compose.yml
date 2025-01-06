@@ -1,0 +1,28 @@
+version: '3'  # version of Docker Compose file format
+
+services:
+  
+  # [CONTAINER_NAME]:
+  #   image: mongo [postgres/mongo/mongo-express]:[version]
+  #   image: [PRIVATE REPO LINK]/mongo [postgres/mongo/mongo-express]:[version]
+  # MongoDB Service
+  mongodb:
+    image: mongo
+    # container_name: mongodb
+    ports:
+      - "27017:27017"  # Expose MongoDB port
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=12345
+  
+  # Mongo-express Service
+  mongo-express:
+    image: mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=12345
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=12345

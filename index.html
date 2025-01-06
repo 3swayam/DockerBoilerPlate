@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple CRUD App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input {
+            margin-right: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple CRUD App</h1>
+    <form id="userForm">
+        <input type="text" id="firstName" placeholder="First Name" required>
+        <input type="text" id="lastName" placeholder="Last Name" required>
+        <button type="submit">Save</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <!-- <th>Actions</th> -->
+            </tr>
+        </thead>
+        <tbody id="userTable">
+            <!-- Rows will be dynamically added here -->
+        </tbody>
+    </table>
+
+    <script>
+        const form = document.getElementById('userForm');
+        const userTable = document.getElementById('userTable');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+
+            const response = await fetch('http://localhost:3000/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ firstName, lastName })
+            });
+
+            if (response.ok) {
+                loadUsers();
+                form.reset();
+            }
+        });
+
+        async function loadUsers() {
+            const response = await fetch('http://localhost:3000/users');
+            const users = await response.json();
+            userTable.innerHTML = '';
+
+            users.forEach((user, index) => {
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td>${user.firstName}</td>
+                    <td>${user.lastName}</td>
+                `;
+
+                // row.innerHTML = `
+                //     <td>${user.firstName}</td>
+                //     <td>${user.lastName}</td>
+                //     <td>
+                //         <button onclick="editUser(${index})">Edit</button>
+                //         <button onclick="deleteUser(${index})">Delete</button>
+                //     </td>
+                // `;
+
+                userTable.appendChild(row);
+            });
+        }
+
+        // async function deleteUser(index) {
+        //     await fetch(`/users/${index}`, { method: 'DELETE' });
+        //     loadUsers();
+        // }
+
+        // async function editUser(index) {
+        //     const response = await fetch(`/users/${index}`);
+        //     const user = await response.json();
+
+        //     document.getElementById('firstName').value = user.firstName;
+        //     document.getElementById('lastName').value = user.lastName;
+        //     await deleteUser(index);
+        // }
+
+        loadUsers();
+    </script>
+</body>
+</html>
